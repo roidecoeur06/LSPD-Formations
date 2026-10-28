@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSPD - Académie & Manuel Rookie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- BARRE DE NAVIGATION -->
+    <nav class="top-nav">
+        <div class="nav-brand">LSPD ACADEMY</div>
+        <div class="nav-user" id="nav-user-zone">
+            <button id="btn-login-modal" class="btn btn-small">🔒 Connexion Agent</button>
+        </div>
+    </nav>
+
+    <!-- MODAL DE CONNEXION AVEC MOT DE PASSE FORMATEUR -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Connexion Espace LSPD</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="matricule-input">Matricule :</label>
+                    <input type="text" id="matricule-input" placeholder="Ex: 42, 07, 105" required>
+                </div>
+                <div class="form-group">
+                    <label for="role-select">Rôle / Accès :</label>
+                    <select id="role-select">
+                        <option value="rookie">Rookie (Recrue)</option>
+                        <option value="trainer">Instructeur / Formateur</option>
+                    </select>
+                </div>
+                
+                <!-- CHAMP MOT DE PASSE (AFFICHÉ SEULEMENT POUR LES FORMATEURS) -->
+                <div class="form-group hidden" id="password-group">
+                    <label for="password-input">Mot de passe Instructeur :</label>
+                    <input type="password" id="password-input" placeholder="Entrez le mot de passe">
+                </div>
+
+                <button type="submit" class="btn btn-full">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- VUE ACCUEIL : MODULES DE FORMATION -->
+    <div id="home-view">
+        <header>
+            <div class="badge">TRAINING DIVISION LSPD</div>
+            <h1>Manuel <span>Rookie LSPD</span></h1>
+            <p>Portail officiel d'apprentissage et de suivi des qualifications du Los Santos Police Department.</p>
+        </header>
+
+        <main class="formations-container">
+            <div class="card" data-module="ls1">
+                <div class="card-tag">MODULE LS 1</div>
+                <h2>🔰 Formation Initiale LSPD</h2>
+                <p>Matériel, hiérarchie, unités (MCD & S.W.A.T) et spécialisations.</p>
+                <button class="btn view-btn">Consulter ce module</button>
+            </div>
+
+            <div class="card" data-module="ls2">
+                <div class="card-tag">MODULE LS 2</div>
+                <h2>⚖️ Procédures Pénales</h2>
+                <p>Droits Miranda, étapes d'arrestation, fouilles et vices de procédure.</p>
+                <button class="btn view-btn">Consulter ce module</button>
+            </div>
+
+            <div class="card" data-module="ls3">
+                <div class="card-tag">MODULE LS 3</div>
+                <h2>🚓 Formation Patrouille</h2>
+                <p>Types d'unités, dispatch MDT, rôles en patrouille et contrôles routiers.</p>
+                <button class="btn view-btn">Consulter ce module</button>
+            </div>
+
+            <div class="card" data-module="ls4">
+                <div class="card-tag">MODULE LS 4</div>
+                <h2>📻 Procédure Radio & Codes 10-XX</h2>
+                <p>Liste exhaustive des codes 10-XX, codes d'urgence et cas pratiques.</p>
+                <button class="btn view-btn">Consulter ce module</button>
+            </div>
+
+            <div class="card" data-module="ls5">
+                <div class="card-tag">MODULE LS 5</div>
+                <h2>🎯 Formation Opération</h2>
+                <p>Périmètres de sécurité, gestion d'assauts et interventions de crise.</p>
+                <button class="btn view-btn">Consulter ce module</button>
+            </div>
+
+            <div class="card" data-module="ls6">
+                <div class="card-tag">MODULE LS 6</div>
+                <h2>🏎️ Formation Conduite</h2>
+                <p>Pilotage prioritaire Code 3, manœuvres PIT et poursuites.</p>
+                <button class="btn view-btn">Consulter ce module</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- VUE DÉTAILLÉE D'UN MODULE -->
+    <div id="detail-view" class="hidden">
+        <div class="detail-wrapper">
+            <button id="back-btn" class="btn btn-secondary">← Retour aux modules</button>
+            <article id="detail-content" class="detail-card"></article>
+        </div>
+    </div>
+
+    <!-- VUE ESPACE RECRUE / ROOKIE -->
+    <div id="rookie-dashboard" class="dashboard-container hidden">
+        <div class="dashboard-header">
+            <h2>Espace Personnel - Recrue <span id="rookie-matricule-display">#--</span></h2>
+            <p>Consultez l'avancement de vos validations auprès de la Training Division.</p>
+        </div>
+        <div class="status-grid" id="rookie-status-grid"></div>
+    </div>
+
+    <!-- VUE TABLEAU FORMATEUR (ROSTER TYPE EXCEL) -->
+    <div id="trainer-dashboard" class="dashboard-container hidden">
+        <div class="dashboard-header">
+            <h2>📊 Tableau de Suivi Instructeur (Roster LSPD)</h2>
+            <p>Cliquez sur les cases pour valider/invalider les modules. Utilisez l'action de suppression pour retirer un dossier.</p>
+        </div>
+
+        <div class="table-controls">
+            <input type="text" id="search-rookie" placeholder="🔍 Rechercher par matricule ou nom..." class="table-search">
+            <button id="add-rookie-btn" class="btn btn-small">+ Ajouter une Recrue</button>
+        </div>
+
+        <div class="excel-table-wrapper">
+            <table class="excel-table">
+                <thead>
+                    <tr>
+                        <th>Matricule</th>
+                        <th>Nom / Prénom</th>
+                        <th>LS 1</th>
+                        <th>LS 2</th>
+                        <th>LS 3</th>
+                        <th>LS 4</th>
+                        <th>LS 5</th>
+                        <th>LS 6</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="roster-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SDKs FIREBASE (S'exécutent en premier pour connecter la base de données) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <!-- VOTRE CODE JAVASCRIPT PRINCIPAL -->
+    <script src="script.js"></script>
+</body>
+</html>
